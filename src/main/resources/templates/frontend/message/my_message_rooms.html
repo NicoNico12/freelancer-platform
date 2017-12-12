@@ -20,52 +20,54 @@
                         <th> </th>
                     </tr>
 
-                    <tr th:each="message : ${messages}">
-                        <td th:if="${message.sender.id == my_id}" th:text="${message.receiver.name}"></td>
-                        <td th:if="${message.sender.id != my_id}" th:text="${message.sender.name}"></td>
+                    <tr th:each="message_room : ${rooms}">
+                        <td th:if="${message_room.sender.id == my_id}" th:text="${message_room.receiver.name}"></td>
+                        <td th:if="${message_room.sender.id != my_id}" th:text="${message_room.sender.name}"></td>
                         
                         <td>
-                        	<span th:text="${message.created}"></span><br />
-                        	<i>
-	                        	<span th:if="${#strings.length(message.text) &lt;= 20}" th:text="${message.text}"></span>
-	                        	<span th:if="${#strings.length(message.text) &gt; 20}" th:text="${#strings.substring(message.text,0,20)}"></span>
+                        	<span th:if="${message_room.lastMessage != null}" 
+                        		  th:text="${message_room.lastMessage.created}"></span>
+                       		<br />
+                        	<i th:if="${message_room.lastMessage != null}">
+	                        	<span th:if="${#strings.length(message_room.lastMessage.text) &lt;= 20}" th:text="${message_room.lastMessage.text}"></span>
+	                        	<span th:if="${#strings.length(message_room.lastMessage.text) &gt; 20}" th:text="${#strings.substring(message_room.lastMessage.text,0,20)}"></span>
 	                        	...
                         	</i>
                         </td>
                         <td>
-                        	<div th:if="${message.job != null}" th:text="${message.job.title}">-</div>
+                        	<div th:if="${message_room.job != null}" th:text="${message_room.job.title}">-</div>
                        	</td>
                         <td>
-                        	<!-- <div th:if="${message.job != null}">
-	                        	<a th:if="${message.sender.id == my_id}"
-	                        	   th:href="@{ '/message/job_room/' + ${message.job.id} + '/' + ${message.receiver.id} }"
+                        	<!-- <div th:if="${message_room.job != null}">
+	                        	<a th:if="${message_room.sender.id == my_id}"
+	                        	   th:href="@{ '/message/job_room/' + ${message_room.job.id} + '/' + ${message_room.receiver.id} }"
 	                        	   class="btn btn-primary">
 	                        	   		<i class="glyphicon glyphicon-envelope"> </i>
 	                       				Open
 	                        	</a>
-	                        	<a th:if="${message.sender.id != my_id}"
-	                        	   th:href="@{ '/message/job_room/' + ${message.job.id} + '/' + ${message.sender.id} }"
+	                        	<a th:if="${message_room.sender.id != my_id}"
+	                        	   th:href="@{ '/message/job_room/' + ${message_room.job.id} + '/' + ${message_room.sender.id} }"
 	                        	   class="btn btn-primary">
 	                       				<i class="glyphicon glyphicon-envelope"> </i>
 	                       				Open
 	                        	</a>
                         	</div>
-                        	<div th:if="${message.job == null}">
-                        		<a th:if="${message.sender.id == my_id}"
-	                        	   th:href="@{ '/message/room/' + ${message.receiver.id} }"
+                        	<div th:if="${message_room.job == null}">
+                        		<a th:if="${message_room.sender.id == my_id}"
+	                        	   th:href="@{ '/message/room/' + ${message_room.receiver.id} }"
 	                        	   class="btn btn-primary">
 	                        	   		<i class="glyphicon glyphicon-envelope"> </i>
 	                       				Open
 	                        	</a>
-	                        	<a th:if="${message.sender.id != my_id}"
-	                        	   th:href="@{ '/message/room/' + ${message.sender.id} }"
+	                        	<a th:if="${message_room.sender.id != my_id}"
+	                        	   th:href="@{ '/message/room/' + ${message_room.sender.id} }"
 	                        	   class="btn btn-primary">
 	                       				<i class="glyphicon glyphicon-envelope"> </i>
 	                       				Open
 	                        	</a>
                         	</div> -->
                         	
- 	                        	<a th:href="@{'/message/job_room/' + ${message.job != null ? message.job.id : 0} + '/' + ${message.sender.id == my_id ? message.receiver.id : message.sender.id}}"
+ 	                        	<a th:href="@{'/message/job_room/' + ${message_room.job != null ? message_room.job.id : 0} + '/' + ${message_room.sender.id == my_id ? message_room.receiver.id : message_room.sender.id}}"
 	                        	   class="btn btn-primary">
 	                        	   		<i class="glyphicon glyphicon-envelope"> </i>
 	                       				Open

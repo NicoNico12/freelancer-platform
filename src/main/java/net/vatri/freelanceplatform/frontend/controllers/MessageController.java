@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import net.vatri.freelanceplatform.models.Bid;
 import net.vatri.freelanceplatform.models.Job;
 import net.vatri.freelanceplatform.models.Message;
+import net.vatri.freelanceplatform.models.MessageRoom;
 import net.vatri.freelanceplatform.models.User;
 import net.vatri.freelanceplatform.services.BidService;
 import net.vatri.freelanceplatform.services.JobService;
+import net.vatri.freelanceplatform.services.MessageRoomService;
 import net.vatri.freelanceplatform.services.MessageService;
 import net.vatri.freelanceplatform.services.UserService;
 
@@ -28,6 +30,9 @@ public class MessageController extends AbstractController {
 
 	@Autowired
 	MessageService messageService;
+
+	@Autowired
+	MessageRoomService messageRoomService;
 
 	@Autowired
 	JobService jobService;
@@ -42,9 +47,10 @@ public class MessageController extends AbstractController {
 	public String myMessageRooms(Model model) {
 		
 		User me = getCurrentUser();
-		List<Message> messages = messageService.getRoomsByUser(me);
+//		List<Message> messages = messageService.getRoomsByUser(me);
+		List<MessageRoom> rooms = messageRoomService.getRoomsByUser(me);
 		
-		model.addAttribute("messages", messages);
+		model.addAttribute("rooms", rooms);
 		
 		model.addAttribute("my_id", me.getId());
 		
@@ -102,16 +108,24 @@ public class MessageController extends AbstractController {
 			}
 		}
 		
+		MessageRoom room = messageRoomService.findByJobAndContractor(job, contractor);
+		
+		if(room == null) {
+			throw new Exception("Message room not found for job and contractor");
+		}
+		
 		String messageText = request.getParameter("message");
 		
 		Message message = new Message();
-		if( job != null ) {
-			message.setJob(job);
-		}
-		message.setReceiver(contractor);
-		message.setSender(getCurrentUser());
+//		if( job != null ) {
+//			message.setJob(job);
+//		}
+		message.setMessageRoom(room);
+		
+//		message.getMessageRoom().setReceiver(contractor);
+//		message.getMessageRoom().setSender(getCurrentUser());
 		message.setText(messageText);
-		message.setCreated( new Date() );
+//		message.setCreated( new Date() );
 
 		Message result = messageService.save(message);
 		if(result == null) {

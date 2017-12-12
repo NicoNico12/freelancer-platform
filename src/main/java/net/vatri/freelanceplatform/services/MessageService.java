@@ -1,6 +1,7 @@
 package net.vatri.freelanceplatform.services;
 
 import net.vatri.freelanceplatform.models.Message;
+import net.vatri.freelanceplatform.models.MessageRoom;
 import net.vatri.freelanceplatform.models.User;
 import net.vatri.freelanceplatform.models.Job;
 import net.vatri.freelanceplatform.repositories.MessageRepository;
@@ -18,6 +19,9 @@ public class MessageService {
 
 	@Autowired
 	MessageRepository messageRepository;
+	
+	@Autowired
+	MessageRoomService messageRoomService;
 
 	public Message save(Message message) {
 		return messageRepository.save(message);
@@ -28,11 +32,15 @@ public class MessageService {
 	}
     
     public List<Message> findByJobAndContractor(Job job, User contractor) {
-    	return messageRepository.findByJobAndSenderOrReceiver(job, contractor);
+    	
+    	MessageRoom rooms = messageRoomService.findByJobAndContractor(job, contractor);
+    	
+    	return messageRepository.findByMessageRoom(rooms);
     }
 
 	public List<Message> getRoomsByUser(User me) {
-		List<Message> allMessages = messageRepository.findBySenderOrReceiver(me);
+		List<MessageRoom> rooms = messageRoomService.getRoomsByUser(me);
+		List<Message> allMessages = messageRepository.findByMessageRoom(rooms);
 		List<Message> result = new ArrayList<Message>();
 		//todo: filter out duplicated (show as rooms)
 		
@@ -42,9 +50,11 @@ public class MessageService {
 		allMessages.forEach(m -> {
 			
 			// Unique hash map key "job-contributor"
-			String key = m.getJob() != null ? String.valueOf( m.getJob().getId()) : "X";
+			String key = m.getMessageRoom().getJob() != null ? String.valueOf( m.getMessageRoom().getJob().getId()) : "X";
 			key += '-';
-			key += (m.getReceiver().getId() == me.getId() ? m.getSender().getId() : m.getReceiver().getId());
+			key += (m.getMessageRoom().getReceiver().getId() == me.getId() 
+						? m.getMessageRoom().getSender().getId() 
+						: m.getMessageRoom().getReceiver().getId());
 			
 			// If room not exist in result add it to unique list
 			Message m2 = uniqueRooms.get(key);
@@ -63,7 +73,8 @@ public class MessageService {
 	}
 
 	public List<Message> findByMyConversers(User me, User converser) {
-		return messageRepository.findByMyConversers(me,converser);
+		List<MessageRoom> rooms = messageRoomService.findByMyConversers(me, converser);
+		return messageRepository.findByMessageRoom(rooms);
 	}
 
 }

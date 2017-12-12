@@ -18,7 +18,7 @@
 					<a th:text="${job.title}" th:href="@{'/job/view/' + ${job.id} }"></a>
 				</p>
 				<div th:each="message : ${messages}" class="message-box">
-					<strong th:text="${message.sender.name}"></strong> 
+					<strong th:text="${message.messageRoom.sender.name}"></strong> 
 					(<span th:text="${#dates.format(message.created, 'MMM dd, yyyy')}"></span>)
 					:
 					<span th:text="${message.text}" class="message-message-text"></span>

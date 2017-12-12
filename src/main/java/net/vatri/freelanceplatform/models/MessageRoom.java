@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class MessageRoom {
@@ -29,6 +30,9 @@ public class MessageRoom {
 	private Job job;
 
 	private Date created;
+	
+	@OneToOne
+	private Message lastMessage;
 
 	public Long getId() {
 		return id;
@@ -69,5 +73,14 @@ public class MessageRoom {
 	public void setCreated(Date created) {
 		this.created = created;
 	}
+
+	public Message getLastMessage() {
+		return lastMessage;
+	}
+
+	public void setLastMessage(Message lastMessage) {
+		this.lastMessage = lastMessage;
+	}
+	
 	
 }

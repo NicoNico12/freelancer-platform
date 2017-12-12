@@ -1,6 +1,8 @@
 package net.vatri.freelanceplatform.frontend.controllers;
 
 import java.util.List;
+
+import net.vatri.freelanceplatform.models.Bid;
 import net.vatri.freelanceplatform.models.Profile;
 import net.vatri.freelanceplatform.models.User;
 import net.vatri.freelanceplatform.services.UserService;
@@ -53,7 +55,7 @@ public class ProfileController extends AbstractController {
         }
         
         
-        List myBids = null;
+        List<Bid> myBids = null;
         if( canEdit){
             myBids = bidService.findByUser(user);
         }

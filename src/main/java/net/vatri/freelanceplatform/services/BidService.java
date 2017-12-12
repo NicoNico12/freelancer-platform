@@ -42,11 +42,11 @@ public class BidService {
         return null;
     }
     
-    public List findByUser(User user){
+    public List<Bid> findByUser(User user){
         return bidRepository.findByUser(user);
     }
     
-    public List findByJob(Job job) {
+    public List<Bid> findByJob(Job job) {
     	return bidRepository.findByJob(job);
     }
 
