@@ -2,17 +2,15 @@ package net.vatri.freelanceplatform.models;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.Size;
 
 @Entity
-public class Message {
+public class MessageRoom {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,11 +18,15 @@ public class Message {
 
 	@ManyToOne
 	@JoinColumn(nullable = false)
-	private MessageRoom messageRoom;
+	private User sender;
 
-	@Column(length = 64000)
-	@Size(min = 2)
-	private String text;
+	@ManyToOne
+	@JoinColumn(nullable = false)
+	private User receiver;
+
+	@ManyToOne
+	@JoinColumn(nullable = true)
+	private Job job;
 
 	private Date created;
 
@@ -36,20 +38,28 @@ public class Message {
 		this.id = id;
 	}
 
-	public MessageRoom getMessageRoom() {
-		return messageRoom;
+	public User getSender() {
+		return sender;
 	}
 
-	public void setMessageRoom(MessageRoom messageRoom) {
-		this.messageRoom = messageRoom;
+	public void setSender(User sender) {
+		this.sender = sender;
 	}
 
-	public String getText() {
-		return text;
+	public User getReceiver() {
+		return receiver;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setReceiver(User receiver) {
+		this.receiver = receiver;
+	}
+
+	public Job getJob() {
+		return job;
+	}
+
+	public void setJob(Job job) {
+		this.job = job;
 	}
 
 	public Date getCreated() {
@@ -59,7 +69,5 @@ public class Message {
 	public void setCreated(Date created) {
 		this.created = created;
 	}
-
 	
-
 }
